@@ -1,0 +1,82 @@
+import speech_recognition
+import pyttsx3
+import socket
+
+
+UDP_IP_95= "127.0.0.1"
+UDP_PORT_95 = 5095
+
+UDP_IP_96 = "127.0.0.2"
+UDP_PORT_96 = 5096
+
+UDP_IP_97 = "127.0.0.3"
+UDP_PORT_97= 5097
+
+UDP_IP_98 = "127.0.0.4"
+UDP_PORT_98= 5098
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+rec= speech_recognition.Recognizer()
+
+while True:
+  try:
+    with speech_recognition.Microphone() as mic:
+      rec.adjust_for_ambient_noise(mic, duration=0.2)
+      audio= rec.listen(mic)
+
+      text= rec.recognize_google(audio)
+
+      print(f"rec  {text}")
+      t= text
+      if t == "gana": #bannah
+          sock.sendto( (str(95)).encode(), (UDP_IP_95, UDP_PORT_95) )
+
+      if t == "banaa": #bannah
+        sock.sendto( (str(95)).encode(), (UDP_IP_95, UDP_PORT_95) )
+
+      if t == "banah": #bannah
+        sock.sendto( (str(95)).encode(), (UDP_IP_95, UDP_PORT_95) )
+
+      if t == "banner": #bannah
+        sock.sendto( (str(95)).encode(), (UDP_IP_95, UDP_PORT_95) )
+
+      if t == "banana": #bannah
+        sock.sendto( (str(95)).encode(), (UDP_IP_95, UDP_PORT_95) )
+
+      if t == "Aryas": #Aryash
+          sock.sendto( (str(96)).encode(), (UDP_IP_96, UDP_PORT_96) )
+
+      if t == "female": #Aryash
+          sock.sendto( (str(96)).encode(), (UDP_IP_96, UDP_PORT_96) )
+
+      if t == "are yaar": #Aryash
+        sock.sendto( (str(96)).encode(), (UDP_IP_96, UDP_PORT_96) )
+
+      if t == "ayaash": #Aryash
+        sock.sendto( (str(96)).encode(), (UDP_IP_96, UDP_PORT_96) )
+
+      
+
+
+      if t == "rakuten": #rackoon
+          sock.sendto( (str(97)).encode(), (UDP_IP_97, UDP_PORT_97) )
+
+      if t == "Amit Shah": #amshat
+          sock.sendto( (str(98)).encode(), (UDP_IP_98, UDP_PORT_98) )
+
+      
+      if t == "Ham shop": #amshat
+          sock.sendto( (str(98)).encode(), (UDP_IP_98, UDP_PORT_98) )
+      
+      if t == "Anushka": #amshat
+          sock.sendto( (str(98)).encode(), (UDP_IP_98, UDP_PORT_98) )
+
+      if t == "Anusha Ham shop": #Aryash
+        sock.sendto( (str(98)).encode(), (UDP_IP_96, UDP_PORT_96) )
+            
+            
+  except:
+  # except speech_recognition.UnknownValueError():
+    rec= speech_recognition.Recognizer()
+    continue
+
