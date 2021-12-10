@@ -1,0 +1,127 @@
+import cv2
+import mediapipe as mp
+import time
+
+from numpy import number
+
+import handm as hm
+import socket
+
+UDP_IP = "127.0.0.1"
+UDP_IP2 = "127.0.0.4"
+UDP_PORT = 5069
+UDP_PORT2=5067
+
+UDP_PORT6 = 5076
+UDP_PORT5 = 5075
+
+UDP_IP6 = "127.0.0.5"
+UDP_IP5 = "127.0.0.6"
+
+
+UDP_PORT222 = 5121
+
+UDP_IP222 = "127.0.0.7"
+
+
+
+
+
+
+
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+
+
+
+wcam, hcam= 2160, 3840
+
+
+cap = cv2.VideoCapture(0) 
+cap.set(3,wcam)
+cap.set(4,hcam)
+
+pTime = 0
+cTime = 0
+
+
+detector= hm.handDetector(detectionCon=0.75)
+fingers_ids= [4, 8, 12, 16, 20 ] 
+while True:
+    success, img = cap.read()
+    img= detector.findHands(img)
+    lm= detector.findPosition(img, draw=False)
+
+    if len(lm) !=0:
+        fingers=[]
+        if lm[fingers_ids[0]][1] > lm[fingers_ids[0]-1][1]:
+            fingers.append(1)
+        else:
+            fingers.append(0)
+
+        for ids in range(1,5):
+
+            if lm[fingers_ids[ids]][2] < lm[fingers_ids[ids]-2][2]:
+                fingers.append(1)
+            else:
+                fingers.append(0)
+
+
+        number_value= fingers.count(1)
+        print(number_value)
+        position1,position_x, position_y= lm[8]
+        
+        inttx=float( format(position_x,".2f"))
+        inttx /= 100.
+
+
+
+        intty=float( format(position_y,".2f"))
+        intty /= 100.
+
+
+        sock.sendto( (str(inttx)).encode(), (UDP_IP, UDP_PORT) )
+        sock.sendto( (str(intty)).encode(), (UDP_IP2, UDP_PORT2) )
+
+        if number_value == 0:
+           
+            position1,position_x, position_y= lm[8]
+            
+            inttx=float( format(position_x,".2f"))
+            inttx /= 100.
+
+    
+
+            intty=float( format(position_y,".2f"))
+            intty /= 100.
+       
+           
+            sock.sendto( (str(inttx)).encode(), (UDP_IP, UDP_PORT) )
+            sock.sendto( (str(intty)).encode(), (UDP_IP2, UDP_PORT2) )
+
+            sock.sendto( (str(inttx)).encode(), (UDP_IP6, UDP_PORT6) )
+            sock.sendto( (str(intty)).encode(), (UDP_IP5, UDP_PORT5) )
+
+        if number_value == 2:
+            print("manar")
+        
+         
+            
+            
+
+    
+    
+    cTime = time.time()
+    fps = 1 / (cTime - pTime)
+    pTime = cTime
+    
+
+    flipHorizontal = cv2.flip(img,1)
+    cv2.imshow("Image", flipHorizontal)
+    
+    cv2.waitKey(1)
+
+
+
+
