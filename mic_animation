@@ -1,0 +1,182 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using UnityEngine.SceneManagement;
+
+public class mic_animation : MonoBehaviour
+{
+      
+public string scene_name3;
+ int numberr;
+  int numberr2;
+
+  int numberr3;
+
+
+Thread receiveThread8;
+Thread receiveThread9;
+Thread receiveThread10;
+UdpClient client8; 
+UdpClient client9; 
+UdpClient client10; 
+int port8; 
+int port9;
+int port10;
+
+
+bool activatee;
+bool activatee2;
+bool scene_move;
+int value;
+private Animator micAnimation;
+
+void Start () {
+activatee= false;
+value=0;
+
+micAnimation= GetComponent<Animator>();
+
+port8= 5072;
+port9 = 5073; 
+port10= 5071; 
+
+  
+
+  InitUDP(); 
+  Update () ;
+}
+
+	
+private void InitUDP(){
+
+  print ("UDP Initialized");
+
+  receiveThread8 = new Thread (new ThreadStart(ReceiveData8));
+  receiveThread8.IsBackground = true; 
+  receiveThread8.Start(); 
+
+  receiveThread9 = new Thread (new ThreadStart(ReceiveData9)); 
+  receiveThread9.IsBackground = true; 
+  receiveThread9.Start(); 
+
+  receiveThread10 = new Thread (new ThreadStart(ReceiveData10)); 
+  receiveThread10.IsBackground = true; 
+  receiveThread10.Start();
+
+
+}
+
+	
+private void ReceiveData8(){
+  client8 = new UdpClient (port8); 
+  while (true) 
+  {
+    try
+    {
+      IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.8"), port8); 
+      byte[] data = client8.Receive(ref anyIP); 
+      string text = Encoding.UTF8.GetString(data); 
+
+       print (">>  " + text);
+
+       numberr=Int16.Parse(text);
+    
+
+        if (numberr == 8){
+           print("val"+numberr);
+        activatee= true;
+        value=8;
+        }
+    activatee= true;
+    
+
+    } 
+    catch(Exception e)
+    {
+      print (e.ToString());
+    }
+  }
+}
+
+private void ReceiveData9(){
+  client9 = new UdpClient (port9); 
+  while (true) 
+  {
+    try
+    {
+      IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.9"), port9);
+      byte[] data = client9.Receive(ref anyIP); 
+      string text = Encoding.UTF8.GetString(data); 
+
+    
+
+       numberr2=Int16.Parse(text);
+      
+
+        if (numberr2 == 9){
+       
+        activatee2= true;
+        value=9;
+        }
+    activatee2= true;
+    
+
+    } 
+    catch(Exception e)
+    {
+      print (e.ToString()); 
+    }
+  }
+}
+
+	private void ReceiveData10(){
+  client10 = new UdpClient (port10); 
+  while (true) 
+  {
+    try
+    {
+      IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.9"), port10);
+      byte[] data = client10.Receive(ref anyIP); 
+      string text = Encoding.UTF8.GetString(data); 
+
+ 
+
+       numberr3=Int16.Parse(text);
+    
+
+        if (numberr3 == 10){
+          
+        scene_move= true;
+        
+        }
+ 
+    } 
+    catch(Exception e)
+    {
+      print (e.ToString());
+    }
+  }
+}
+
+
+
+void Update () {
+print(activatee);
+
+    
+
+    micAnimation.SetInteger("value", value);
+
+    if (scene_move== true){
+
+      SceneManager.LoadScene(scene_name3);
+    }
+
+ 
+}
+}
