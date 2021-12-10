@@ -1,0 +1,60 @@
+import speech_recognition as sr
+import time
+import socket
+
+UDP_IP = "127.0.0.2"
+UDP_PORT = 5071
+
+UDP_IP_8 = "127.0.0.8"
+UDP_PORT_8 = 5072
+
+UDP_IP_9 = "127.0.0.9"
+UDP_PORT_9= 5073
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+
+
+while True:
+
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+      
+        print("Speak Anything :")
+        sock.sendto( (str(8)).encode(), (UDP_IP_8, UDP_PORT_8) )
+        audio = r.listen(source)
+        
+        r.adjust_for_ambient_noise(source, duration=0.2)
+        print("abc")
+        try:
+            text = r.recognize_google(audio)
+            sock.sendto( (str(9)).encode(), (UDP_IP_9, UDP_PORT_9) ) 
+            
+     
+            print("You said : {}".format(text))
+            
+              
+            t= text
+            if t == "female": #bannah
+                sock.sendto( (str(10)).encode(), (UDP_IP, UDP_PORT) )
+                import symbols_names
+
+            if t == "banaa": #bannah
+                sock.sendto( (str(10)).encode(), (UDP_IP, UDP_PORT) )
+                import symbols_names
+
+            if t == "banah": #bannah
+                sock.sendto( (str(10)).encode(), (UDP_IP, UDP_PORT) )
+                import symbols_names
+
+            if t == "banner": #bannah
+                sock.sendto( (str(10)).encode(), (UDP_IP, UDP_PORT) )
+                import symbols_names
+
+            if t == "banana": #bannah
+                sock.sendto( (str(10)).encode(), (UDP_IP, UDP_PORT) )
+                import symbols_names
+
+        except:
+            sock.sendto( (str(9)).encode(), (UDP_IP_9, UDP_PORT_9) )
+            print("Sorry could not recognize what you said")
+        
