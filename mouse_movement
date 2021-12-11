@@ -1,0 +1,277 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+
+public class movenent : MonoBehaviour
+{
+  private symbols_m p_move;
+  GameObject move_s;
+
+
+float num2;
+float num;
+  
+Thread receiveThread; 
+Thread receiveThread2;
+UdpClient client; 
+
+UdpClient client2;
+int port; 
+int port2;
+
+GameObject symbol1;
+  Transform cursor;
+  GameObject red;
+  GameObject yellow;
+  GameObject green;
+  GameObject blue;
+  bool yesss;
+  bool yesss2;
+
+  bool green_on;
+  bool blue_on;
+
+  int port6;
+
+int port5;
+bool activatee;
+bool on;
+
+
+
+Thread receiveThread4;
+Thread receiveThread5;
+UdpClient client4; 
+
+UdpClient client5; 
+GameObject blue_move;
+GameObject current;
+
+
+  int numberr;
+
+  float num22;
+float num11;
+
+ int counter=0;
+
+bool jump; 
+public GameObject BLUE;
+GameObject[] Symbols;
+
+GameObject ss;
+
+
+	
+void Start () {
+  p_move= FindObjectOfType<symbols_m>();
+
+  
+  port = 5069; //1 
+  port2= 5067;
+  jump = false; //2 
+
+   port6 = 5076;
+    port5 = 5075;
+activatee= false;
+  
+  InitUDP(); 
+    Update () ;
+  
+
+}
+
+	
+private void InitUDP(){
+
+  print ("UDP Initialized");
+
+  receiveThread = new Thread (new ThreadStart(ReceiveData));
+  receiveThread.IsBackground = true; 
+  receiveThread.Start(); 
+
+
+  receiveThread2= new Thread (new ThreadStart(ReceiveData2)); 
+  receiveThread2.IsBackground = true; 
+  receiveThread2.Start();
+
+  
+  receiveThread4 = new Thread (new ThreadStart(ReceiveData4)); 
+  receiveThread4.IsBackground = true; 
+  receiveThread4.Start(); 
+
+
+  receiveThread5= new Thread (new ThreadStart(ReceiveData5)); 
+  receiveThread5.IsBackground = true;
+  receiveThread5.Start();
+}
+
+
+private void ReceiveData(){
+  client = new UdpClient (port); 
+  while (true) 
+  {
+    try
+    {
+      IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.0"), port);
+      byte[] data = client.Receive(ref anyIP); 
+      string text = Encoding.UTF8.GetString(data); 
+
+   
+
+      num=float.Parse(text);
+
+      jump = true; 
+
+    } 
+    catch(Exception e)
+    {
+      print (e.ToString()); 
+    }
+  }
+}
+
+
+private void ReceiveData2(){
+  client2 = new UdpClient (port2); 
+  while (true) 
+  {
+    try
+    {
+      IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.1"), port2); 
+      byte[] data2 = client2.Receive(ref anyIP);
+      string text2 = Encoding.UTF8.GetString(data2); 
+
+    
+
+     num2=float.Parse(text2);
+
+      jump = true; 
+
+    } 
+    catch(Exception e)
+    {
+      print (e.ToString()); 
+    }
+  }
+  
+}
+
+
+
+
+
+	
+public void move()
+{
+  
+  transform.position = new Vector2(num, num2);
+
+  
+  
+
+}
+
+public void move2(){
+
+  p_move.xfunction(num11);
+  p_move.yfunction(num22);
+}
+
+
+private void ReceiveData4(){
+  client4 = new UdpClient (port6); 
+  while (true) 
+  {
+    try
+    {
+      IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.0"), port6); 
+      byte[] data = client4.Receive(ref anyIP);
+      string text = Encoding.UTF8.GetString(data); 
+
+
+
+      num11=float.Parse(text);
+
+      activatee = true; 
+
+    } 
+    catch(Exception e)
+    {
+      print (e.ToString()); 
+    }
+  }
+}
+
+
+private void ReceiveData5(){
+  client5 = new UdpClient (port5); 
+  while (true) 
+  {
+    try
+    {
+      IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.1"), port5);
+      byte[] data2 = client5.Receive(ref anyIP); 
+      string text2 = Encoding.UTF8.GetString(data2); 
+
+    
+
+     num22=float.Parse(text2);
+    
+      activatee = true; 
+
+    } 
+    catch(Exception e)
+    {
+      print (e.ToString());
+    }
+  }
+  
+}
+
+
+void Update () {
+  move();
+ 
+  
+  if (on== true){
+  
+    current.transform.position = new Vector2(num11, num22);
+    
+
+  }
+
+  
+  
+}
+
+private void OnTriggerEnter2D(Collider2D collider) {
+  
+if (collider.tag== "grab"){
+  Symbols= GameObject.FindGameObjectsWithTag("grab");
+
+  Debug.Log("grabbed");
+on=true;
+current = collider.gameObject;
+
+}
+
+
+ 
+
+
+}
+
+
+
+
+
+
+
+
+}
