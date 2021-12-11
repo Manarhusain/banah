@@ -1,0 +1,97 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+
+public class scene_video : MonoBehaviour
+{
+int numberr;
+
+Thread receiveThread333;
+UdpClient client3; 
+int port; 
+public string scene_name;
+public string scene_name2;
+bool activatee;
+
+ 
+    void Start()
+    {
+        
+        port = 5121;
+InitUDP(); 
+
+  Update () ;
+    }
+
+    private void InitUDP(){
+
+  print ("UDP Initialized");
+
+  receiveThread333 = new Thread (new ThreadStart(ReceiveData));
+  receiveThread333.IsBackground = true; 
+  receiveThread333.Start();
+
+}
+private void ReceiveData(){
+  client3 = new UdpClient (port); 
+  while (true) 
+  {
+    try
+    {
+      IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.3"), port); 
+      byte[] data = client3.Receive(ref anyIP); 
+      string text = Encoding.UTF8.GetString(data); 
+
+
+
+       numberr=Int16.Parse(text);
+
+        if (numberr == 333){
+            Debug.Log("video");
+        activatee= true;
+        }
+    
+
+    } 
+    catch(Exception e)
+    {
+      print (e.ToString()); 
+    }
+  }
+}
+void play(){
+    
+   
+    SceneManager.LoadScene(scene_name );
+      
+    
+   
+   
+    activatee = false;
+  
+}
+
+    void Update()
+    {
+        if (activatee== true){
+         
+            play();
+          activatee = false;
+
+
+        }
+    }
+
+    void back(){
+    SceneManager.LoadScene(scene_name2);
+
+    }
+
+ 
+}
