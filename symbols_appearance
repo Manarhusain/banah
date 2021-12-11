@@ -1,0 +1,347 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+
+public class symbols_A : MonoBehaviour
+{
+    public GameObject[] bana_symbol;  //id:1
+     public GameObject[] aryash_symbol;
+      public GameObject[] rackoon_symbol;
+       public GameObject[] amshat_symbol;
+    int numberr;
+    int numberr2;
+    int numberr3;
+    int numberr4;
+
+Thread receiveThread_1;
+Thread receiveThread_2;
+Thread receiveThread_3;
+Thread receiveThread_4;
+UdpClient client_1; 
+
+UdpClient client_2; 
+
+UdpClient client_3; 
+
+UdpClient client_4; 
+int port_1; 
+int port_2; 
+int port_3; 
+int port_4; 
+bool activate;
+bool activate2;
+bool activate3;
+bool activate4;
+GameObject[] banah_m;
+GameObject[] aryah_m;
+
+GameObject[] rakoon_m;
+
+GameObject[] amshat_m;
+
+
+
+    void Start()
+    {
+        
+        port_1= 5095; //banah
+
+        port_2=5096 ; //Aryash
+        port_3= 5097; //rackoon
+        port_4= 5098; //amshat
+
+
+
+         banah_m= GameObject.FindGameObjectsWithTag ("Banah");
+       aryah_m= GameObject.FindGameObjectsWithTag ("Aryash");
+
+         rakoon_m= GameObject.FindGameObjectsWithTag ("Rakoon");
+
+        amshat_m= GameObject.FindGameObjectsWithTag ("Amshat_meaning");
+
+        
+      banah_m[0].GetComponent<Renderer>().enabled = false;
+      aryah_m[0].GetComponent<Renderer>().enabled = false;
+      rakoon_m[0].GetComponent<Renderer>().enabled = false;
+      amshat_m[0].GetComponent<Renderer>().enabled = false;
+
+      banah_m[1].GetComponent<Renderer>().enabled = false;
+      aryah_m[1].GetComponent<Renderer>().enabled = false;
+      rakoon_m[1].GetComponent<Renderer>().enabled = false;
+      amshat_m[1].GetComponent<Renderer>().enabled = false;
+     
+
+        InitUDP();
+        Update();
+       
+     
+
+    }
+
+private void InitUDP(){
+
+
+  receiveThread_1 = new Thread (new ThreadStart(ReceiveData_1)); 
+  receiveThread_1.IsBackground = true; 
+  receiveThread_1.Start(); 
+
+    receiveThread_2 = new Thread (new ThreadStart(ReceiveData_2)); 
+  receiveThread_2.IsBackground = true; 
+  receiveThread_2.Start(); 
+
+    receiveThread_3 = new Thread (new ThreadStart(ReceiveData_3)); 
+  receiveThread_3.IsBackground = true; 
+  receiveThread_3.Start(); 
+
+    receiveThread_4 = new Thread (new ThreadStart(ReceiveData_4)); 
+  receiveThread_4.IsBackground = true; 
+  receiveThread_4.Start(); 
+
+}
+
+private void ReceiveData_1(){
+  client_1 = new UdpClient (port_1);
+  while (true) 
+  {
+    try
+    {
+      IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.3"), port_1); 
+      byte[] data = client_1.Receive(ref anyIP); 
+      string text = Encoding.UTF8.GetString(data); 
+
+  
+
+       numberr=Int16.Parse(text);
+      
+
+        if (numberr == 95){
+         
+        activate= true;
+        print(activate);
+       
+      
+        
+        }
+  
+
+    } 
+    catch(Exception e)
+    {
+      print (e.ToString()); 
+    }
+  }
+}
+
+private void ReceiveData_2(){
+  client_2 = new UdpClient (port_2);
+  while (true) 
+  {
+    try
+    {
+      IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.1"), port_2);
+      byte[] data = client_2.Receive(ref anyIP);
+      string text = Encoding.UTF8.GetString(data); 
+
+  
+
+      numberr2=Int16.Parse(text);
+      
+
+        if (numberr2 == 96){
+         
+           Debug.Log("aryash");
+        activate2= true;
+     
+
+        }
+  
+
+    } 
+    catch(Exception e)
+    {
+      print (e.ToString()); 
+    }
+  }
+}
+
+private void ReceiveData_3(){
+  client_3 = new UdpClient (port_3); 
+  while (true)
+  {
+    try
+    {
+      IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.1"), port_3); 
+      byte[] data = client_3.Receive(ref anyIP); 
+      string text = Encoding.UTF8.GetString(data); 
+
+  
+
+      numberr3=Int16.Parse(text);
+      
+
+        if (numberr3 == 97){
+
+           Debug.Log("rackoon");
+        activate3= true;
+  
+
+        }
+  
+
+    } 
+    catch(Exception e)
+    {
+      print (e.ToString());
+    }
+  }
+}
+
+private void ReceiveData_4(){
+  client_4 = new UdpClient (port_4);
+  while (true) 
+  {
+    try
+    {
+      IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.1"), port_4); 
+      byte[] data = client_4.Receive(ref anyIP); 
+      string text = Encoding.UTF8.GetString(data); 
+
+  
+
+      numberr4=Int16.Parse(text);
+      
+
+        if (numberr4 == 98){
+           
+           Debug.Log("amshat");
+        activate4= true;
+
+        }
+  
+
+    } 
+    catch(Exception e)
+    {
+      print (e.ToString());
+    }
+  }
+}
+
+
+
+void create(){
+    int rand= UnityEngine.Random.Range(0, bana_symbol.Length);
+    
+    Instantiate(bana_symbol[rand] );
+ banah_m[0].GetComponent<Renderer>().enabled = true;
+      aryah_m[0].GetComponent<Renderer>().enabled = false;
+      rakoon_m[0].GetComponent<Renderer>().enabled = false;
+      amshat_m[0].GetComponent<Renderer>().enabled = false;
+
+      banah_m[1].GetComponent<Renderer>().enabled = true;
+      aryah_m[1].GetComponent<Renderer>().enabled = false;
+      rakoon_m[1].GetComponent<Renderer>().enabled = false;
+      amshat_m[1].GetComponent<Renderer>().enabled = false;
+        
+
+
+    activate = false;
+
+}
+
+void create2(){
+    int rand= UnityEngine.Random.Range(0, aryash_symbol.Length);
+
+    Instantiate(aryash_symbol[rand] );
+
+    activate2 = false;
+
+
+    banah_m[0].GetComponent<Renderer>().enabled = false;
+      aryah_m[0].GetComponent<Renderer>().enabled = true;
+      rakoon_m[0].GetComponent<Renderer>().enabled = false;
+      amshat_m[0].GetComponent<Renderer>().enabled = false;
+
+      
+    banah_m[1].GetComponent<Renderer>().enabled = false;
+      aryah_m[1].GetComponent<Renderer>().enabled = true;
+      rakoon_m[1].GetComponent<Renderer>().enabled = false;
+      amshat_m[1].GetComponent<Renderer>().enabled = false;
+}
+
+void create3(){
+    int rand= UnityEngine.Random.Range(0, rackoon_symbol.Length);
+ 
+    Instantiate(rackoon_symbol[rand] );
+ 
+
+  banah_m[0].GetComponent<Renderer>().enabled = false;
+      aryah_m[0].GetComponent<Renderer>().enabled = false;
+      rakoon_m[0].GetComponent<Renderer>().enabled = true;
+      amshat_m[0].GetComponent<Renderer>().enabled = false;
+
+      banah_m[1].GetComponent<Renderer>().enabled = false;
+      aryah_m[1].GetComponent<Renderer>().enabled = false;
+      rakoon_m[1].GetComponent<Renderer>().enabled = true;
+      amshat_m[1].GetComponent<Renderer>().enabled = false;
+    activate3 = false;
+
+}
+
+
+void create4(){
+    
+    Instantiate(amshat_symbol[0] );
+
+
+  banah_m[0].GetComponent<Renderer>().enabled = false;
+      aryah_m[0].GetComponent<Renderer>().enabled = false;
+      rakoon_m[0].GetComponent<Renderer>().enabled = false;
+      amshat_m[0].GetComponent<Renderer>().enabled = true;
+
+      
+  banah_m[1].GetComponent<Renderer>().enabled = false;
+      aryah_m[1].GetComponent<Renderer>().enabled = false;
+      rakoon_m[1].GetComponent<Renderer>().enabled = false;
+      amshat_m[1].GetComponent<Renderer>().enabled = true;
+    activate4 = false;
+ 
+}
+  
+    void Update()
+    {
+    if (activate == true){
+         create();
+         activate = false;
+   }
+
+    if (activate2 == true){
+         create2();
+         activate2 = false;
+   }
+
+     if (activate3 == true){
+         create3();
+         activate3 = false;
+   }
+
+    if (activate4 == true){
+         create4();
+         activate4 = false;
+   }
+
+   
+        
+    }
+
+
+
+
+
+
+}
